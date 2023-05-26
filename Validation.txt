@@ -1,0 +1,8 @@
+Birtday validation:
+DOB__c > TODAY()
+PAN Validation:
+NOT( REGEX( PAN__c , "[A-Z]{3}[P,H,F,C,A,T,B,L,J,]}[A-Z]{1}[0-9]{4}[A-Z]{1}") ||  REGEX( PAN__c ,"[A-Z]{5}[0-9]{4}[A-Z]{1}")  )
+Phone No.validation:
+LEN( Phone_no__c )>10
+Subject Marks validation:
+OR(Sub_1__c >100, Sub_2__c >100)

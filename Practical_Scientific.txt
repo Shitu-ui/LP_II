@@ -1,0 +1,115 @@
+Apex class:
+
+public class CalculatorController {
+    public Decimal num1 { get; set; }
+    public Decimal num2 { get; set; }
+    public Decimal result { get; set; }
+    public Boolean showResult { get; set; }
+    public List<String> errorMessages { get; set; }
+    
+    public CalculatorController() {
+        errorMessages = new List<String>();
+    }
+    
+    public void add() {
+        result = num1 + num2;
+        showResult = true;
+    }
+    
+    public void subtract() {
+        result = num1 - num2;
+        showResult = true;
+    }
+    
+    public void multiply() {
+        result = num1 * num2;
+        showResult = true;
+    }
+    
+    public void divide() {
+        if (num2 != 0) {
+            result = num1 / num2;
+            showResult = true;
+        } else {
+             apexpages.addMessage(new ApexPages.message(Apexpages.Severity.ERROR,'Cant divide by 0'));
+          //  errorMessages.add('Cannot divide by zero.');
+            showResult = false;
+        }
+    }
+    
+    public void calculateLog() {
+        if (num1 > 0) {
+            result = Math.log(num1);
+            showResult = true;
+        } else {
+            errorMessages.add('Invalid input for logarithm.');
+            showResult = false;
+        }
+    }
+    
+    public void calculateSqrt() {
+        if (num1 >= 0) {
+            result = Math.sqrt(num1);
+            showResult = true;
+        } else {
+            errorMessages.add('Invalid input for square root.');
+            showResult = false;
+        }
+    }
+    
+    public void calculateSin() {
+        result = Math.sin(num1);
+        showResult = true;
+    }
+    
+    public void calculateCos() {
+        result = Math.cos(num1);
+        showResult = true;
+    }
+    
+    public void calculateTan() {
+        result = Math.tan(num1);
+        showResult = true;
+    }
+}
+
+VisualForce Page:
+<apex:page controller="CalculatorController">
+    <apex:form >
+        <apex:pageMessages />
+
+        <apex:pageBlock >
+            <apex:pageBlockSection >
+                <apex:outputText value="Enter the number: "/>
+                <apex:inputText value="{!num1}"/>
+                 <apex:outputText value="Enter the number: "/>
+                <apex:inputText value="{!num2}"/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection >
+                <apex:commandButton value="Add" action="{!add}" rerender="resultPanel"/>
+                <apex:commandButton value="Subtract" action="{!subtract}" rerender="resultPanel"/>
+                <apex:commandButton value="Multiply" action="{!multiply}" rerender="resultPanel"/>
+                <apex:commandButton value="Divide" action="{!divide}" rerender="resultPanel"/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection >
+                <apex:commandButton value="Log" action="{!calculateLog}" rerender="resultPanel"/>
+                <apex:commandButton value="Square Root" action="{!calculateSqrt}" rerender="resultPanel"/>
+                <apex:commandButton value="Sine" action="{!calculateSin}" rerender="resultPanel"/>
+                <apex:commandButton value="Cosine" action="{!calculateCos}" rerender="resultPanel"/>
+                <apex:commandButton value="Tangent" action="{!calculateTan}" rerender="resultPanel"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <apex:outputPanel id="resultPanel">
+            <apex:pageBlock rendered="{!showResult}">
+                <apex:pageBlockSection >
+                    <apex:outputText value="Result: {!result}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+            
+            <apex:pageMessages rendered="{!NOT(showResult)}"/>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

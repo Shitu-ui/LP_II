@@ -1,0 +1,58 @@
+Apex class:
+public class CurrencyConverterController
+{
+    public Decimal amount { get; set; }
+    public String fromCurrency { get; set; }
+    public String toCurrency { get; set; }
+    public Decimal convertedAmount { get; set; }
+
+    public List<SelectOption> getCurrencyOptions()
+    {
+        List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('USD', 'USD'));
+        options.add(new SelectOption('INR', 'INR'));
+        options.add(new SelectOption('GBP', 'GBP'));
+        options.add(new SelectOption('JPY', 'JPY'));
+        return options;
+    }
+
+   public void convert(){
+        Decimal from_rate=0;
+        if(fromCurrency=='JPY')from_rate=0.0072;
+        if(fromCurrency=='USD')from_rate=1;
+        if(fromCurrency=='GBP')from_rate=1.24;
+        if(fromCurrency=='INR')from_rate=0.012;
+        Decimal first=from_rate*amount;
+        Decimal to_rate=0;
+        if(toCurrency=='JPY')to_rate=138.59;
+        if(toCurrency=='USD')to_rate=1;
+        if(toCurrency=='GBP')to_rate=0.81;
+        if(toCurrency=='INR')to_rate=82.90;
+        convertedAmount=first*to_rate;
+        convertedAmount=convertedAmount.setScale(2, System.roundingMode.HALF_UP);
+    }
+}
+VisualForce Page:
+<apex:page controller="CurrencyConverterController">
+     <apex:sectionHeader title="Currency Converter" subtitle="Conversion"/> 
+    <apex:form >
+        <apex:pageBlock title="Currency Conversions">
+            <apex:pageBlockSection >
+                <apex:inputText label="Amount" value="{!amount}" />
+                <br/>
+                <apex:selectList label="From Currency" value="{!fromCurrency}">
+                    <apex:selectOptions value="{!currencyOptions}" />
+                </apex:selectList>
+                <apex:selectList label="To Currency" value="{!toCurrency}">
+                    <apex:selectOptions value="{!currencyOptions}" />
+                </apex:selectList>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Convert" action="{!convert}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock title="Result" rendered="{!convertedAmount != null}">
+            <apex:outputText value="Converted Amount: {!convertedAmount}" />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

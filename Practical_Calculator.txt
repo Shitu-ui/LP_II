@@ -1,0 +1,64 @@
+Apex class:
+public class Calculator {
+
+    public integer firstNumber{get;set;}
+    public integer secondNumber{get;set;}
+    public integer result{get;set;}
+    public Boolean showResult { get; set; }
+    public List<String> errorMessages { get; set; }
+    
+    public Calculator() {
+        errorMessages = new List<String>();
+    }
+
+    public void Addition()
+    {
+        result=firstNumber+secondNumber;
+    }
+    public void Subtraction()
+    {
+        result=firstNumber-secondNumber;
+    }
+    public void Multiplication()
+    {
+        result=firstNumber*secondNumber;
+    }
+	public void Division() {
+        if (secondNumber != 0) {
+            result = firstNumber / secondNumber;
+            showResult = true;
+        } else {
+             apexpages.addMessage(new ApexPages.message(Apexpages.Severity.ERROR,'Cant divide by 0'));
+          //  errorMessages.add('Cannot divide by zero.');
+            showResult = false;
+        }
+    }
+}
+
+VisualForce Page:
+<apex:page controller="Calculator">
+   <apex:sectionHeader title="Calculator" subtitle="Basic Functionalities"/> 
+    <apex:form >
+        <apex:pageMessages />
+    <apex:pageBlock title="Simple Calculator">
+        <apex:pageBlockButtons location="bottom">
+        <apex:commandButton value="Addition" action="{!Addition}"/>
+         <apex:commandButton value="Subtraction" action="{!Subtraction}"/>
+         <apex:commandButton value="Multiplication" action="{!Multiplication}"/>
+         <apex:commandButton value="Division" action="{!Division}"/>
+            </apex:pageBlockButtons>
+       
+        <apex:pageBlockSection title="Calculator">
+        <apex:inputText label="Enter First Number" html-placeholder="First Number" value="{!firstNumber}"/>
+      
+        <apex:inputText label="Enter Second Number" html-placeholder="Second Number" value="{!secondNumber}"/>
+     
+        <apex:outputText label="Result" value="{!result}" id="res" ></apex:outputText>
+            
+        </apex:pageBlockSection>
+		<apex:pageBlockSection >
+        <apex:pageMessages rendered="{!NOT(showResult)}"/>
+        </apex:pageBlockSection>
+         </apex:pageBlock>
+    </apex:form>
+</apex:page>
